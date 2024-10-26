@@ -70,7 +70,7 @@ function getVideoDuration(videoPath: string) {
 }
 
 function getAnimal(videoPath: string) {
-  return path.basename(videoPath).split('_')[1].toLowerCase();
+  return path.basename(videoPath).split('_')[1];
 }
 
 async function findAssets() {
