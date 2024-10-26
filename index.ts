@@ -31,15 +31,30 @@ async function main() {
     console.log('picked TV', currentAnimal);
   }
 
-  console.log('rendering video...');
+  const durationFormatted = formatDuration(duration);
+  console.log('\nrendering video...');
   ffmpegCommand
     .mergeToFile(OUTPUT_FILE, '/temp/')
+    .on('progress', (progress) => {
+      const { timemark } = progress;
+      const timemarkFormatted = timemark.slice(
+        timemark.indexOf(':') + 1,
+        timemark.indexOf('.')
+      );
+      console.log(`${timemarkFormatted}/${durationFormatted}`);
+    })
     .on('error', (err) => {
       console.error(err);
     })
     .on('end', () => {
       console.log('finished!');
     });
+}
+
+function formatDuration(duration: number) {
+  const minutes = (duration / 60).toFixed(0);
+  const seconds = (duration % 60).toFixed(0);
+  return `${minutes}:${seconds.toString().padStart(2, '0')}`;
 }
 
 function getVideoDuration(videoPath: string) {
